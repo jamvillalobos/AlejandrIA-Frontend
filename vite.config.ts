@@ -1,6 +1,9 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
+// Add Node.js types for process.env
+/// <reference types="node" />
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
@@ -11,8 +14,16 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      '/ask': 'http://localhost:5000',
-      '/chat': 'http://localhost:5000'
+      '/ask': {
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false
+      },
+      '/chat': {
+        target: process.env.VITE_BACKEND_URL || 'http://localhost:5000',
+        changeOrigin: true,
+        secure: false
+      }
     }
   }
 })
