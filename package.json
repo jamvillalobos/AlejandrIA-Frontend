@@ -12,7 +12,8 @@
     "lint:fix": "npx eslint --fix",
     "prettier": "npx prettier src --check",
     "prettier:fix": "npx prettier src --write",
-    "format": "npm run prettier:fix && npm run lint:fix"
+    "format": "npm run prettier:fix && npm run lint:fix",
+    "start": "serve -s static"
   },
   "dependencies": {
     "@fluentui/react": "^8.109.0",
