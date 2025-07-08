@@ -1,10 +1,13 @@
+// Import '@vitejs/plugin-react' to enable React support in Vite
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
 
 // Add Node.js types for process.env
 /// <reference types="node" />
 
-// https://vitejs.dev/config/
+// This Vite configuration file sets up a React project with specific build and server settings
+// It includes plugins for React, specifies the output directory for the build, enables source maps,
+// and configures a proxy for API requests to a backend server.
 export default defineConfig({
   plugins: [react()],
   build: {

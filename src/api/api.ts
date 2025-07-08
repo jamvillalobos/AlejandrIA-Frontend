@@ -1,8 +1,16 @@
+// Import the necessary types and constants
 import { chatHistorySampleData } from '../constants/chatHistory'
 import { ChatMessage, Conversation, ConversationRequest, CosmosDBHealth, CosmosDBStatus, UserInfo } from './models'
 
+// Define the backend URL from environment variables or default to an empty string
+// This allows the application to be configured for different environments (e.g., development, production)
+// The VITE_BACKEND_URL variable should be set in the .env file or through the build process
+// If not set, it defaults to an empty string, which may lead to issues
+// if the application tries to make API calls without a valid backend URL.
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || ''
 
+// This function sends a conversation request to the backend API
+// It takes a ConversationRequest object and an AbortSignal for cancellation
 export async function conversationApi(options: ConversationRequest, abortSignal: AbortSignal): Promise<Response> {
   const response = await fetch(`${BACKEND_URL}/conversation`, {
     method: 'POST',
@@ -18,6 +26,9 @@ export async function conversationApi(options: ConversationRequest, abortSignal:
   return response
 }
 
+// This function retrieves user information from the backend API
+// It checks if the user is authenticated and returns their information
+// If the user is not authenticated, it logs a message and returns an empty array
 export async function getUserInfo(): Promise<UserInfo[]> {
   const response = await fetch(`${BACKEND_URL}/.auth/me`)
   if (!response.ok) {
@@ -36,6 +47,7 @@ export const fetchChatHistoryInit = (): Conversation[] | null => {
   return chatHistorySampleData
 }
 
+// This function retrieves the chat history from the backend API
 export const historyList = async (offset = 0): Promise<Conversation[] | null> => {
   const response = await fetch(`${BACKEND_URL}/history/list?offset=${offset}`, {
     method: 'GET'
@@ -76,6 +88,9 @@ export const historyList = async (offset = 0): Promise<Conversation[] | null> =>
   return response
 }
 
+// This function reads the chat history for a specific conversation ID
+// It fetches the messages associated with that conversation from the backend API
+// It returns an array of ChatMessage objects or an empty array if there was an error
 export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
   const response = await fetch(`${BACKEND_URL}/history/read`, {
     method: 'POST',
@@ -113,6 +128,7 @@ export const historyRead = async (convId: string): Promise<ChatMessage[]> => {
   return response
 }
 
+// This function generates a new conversation history based on the provided options
 export const historyGenerate = async (
   options: ConversationRequest,
   abortSignal: AbortSignal,
@@ -147,6 +163,8 @@ export const historyGenerate = async (
   return response
 }
 
+// This function updates the chat history for a specific conversation ID
+// It sends the updated messages to the backend API
 export const historyUpdate = async (messages: ChatMessage[], convId: string): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/update`, {
     method: 'POST',
@@ -173,6 +191,7 @@ export const historyUpdate = async (messages: ChatMessage[], convId: string): Pr
   return response
 }
 
+//  This function deletes a specific conversation history based on the conversation ID
 export const historyDelete = async (convId: string): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/delete`, {
     method: 'DELETE',
@@ -198,6 +217,7 @@ export const historyDelete = async (convId: string): Promise<Response> => {
   return response
 }
 
+// This function deletes all conversation histories
 export const historyDeleteAll = async (): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/delete_all`, {
     method: 'DELETE',
@@ -221,6 +241,7 @@ export const historyDeleteAll = async (): Promise<Response> => {
   return response
 }
 
+// This function clears the chat history for a specific conversation ID
 export const historyClear = async (convId: string): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/clear`, {
     method: 'POST',
@@ -246,6 +267,7 @@ export const historyClear = async (convId: string): Promise<Response> => {
   return response
 }
 
+// This function renames a specific conversation history based on the conversation ID and new title
 export const historyRename = async (convId: string, title: string): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/rename`, {
     method: 'POST',
@@ -272,6 +294,7 @@ export const historyRename = async (convId: string, title: string): Promise<Resp
   return response
 }
 
+// This function ensures that the CosmosDB is configured and returns its health status
 export const historyEnsure = async (): Promise<CosmosDBHealth> => {
   const response = await fetch(`${BACKEND_URL}/history/ensure`, {
     method: 'GET'
@@ -314,6 +337,7 @@ export const historyEnsure = async (): Promise<CosmosDBHealth> => {
   return response
 }
 
+// This function retrieves the frontend settings from the backend API
 export const frontendSettings = async (): Promise<Response | null> => {
   const response = await fetch(`${BACKEND_URL}/frontend_settings`, {
     method: 'GET'
@@ -328,6 +352,8 @@ export const frontendSettings = async (): Promise<Response | null> => {
 
   return response
 }
+
+// This function logs feedback for a specific message in the chat history
 export const historyMessageFeedback = async (messageId: string, feedback: string): Promise<Response> => {
   const response = await fetch(`${BACKEND_URL}/history/message_feedback`, {
     method: 'POST',
